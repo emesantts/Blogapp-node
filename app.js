@@ -58,31 +58,17 @@ app.engine('handlebars', engine({
 app.set('view engine', 'handlebars');
 app.set('views', './views');
  //Mongoose
-  mongoose.Promise = global.Promise;
-  mongoose.connect('mongodb://localhost/blogapp').then(() =>{
-   console.log('conectado ao mongo')
-  }).catch((err) =>{
-   console.log('Erro ao se conectar:' + err)
-  })
+  //Mongoose
+mongoose.Promise = global.Promise;
 
-  mongoose.connect(db.mongoURI)
-  .then(() => {
-    console.log("MongoDB conectado com sucesso!");
-  })
-  .catch((err) => {
-    console.log("Erro ao conectar ao MongoDB: " + err);
-  });
- //Public
- app.use(express.static(path.join(__dirname, "public")));
-//Rotas
-   app.get('/',(req, res) => {
-      Postagem.find().lean().populate("categoria").sort({data: "desc"}).then((postagens) => {
-         res.render("index", {postagens: postagens})
-      }).catch((err) => {
-         req.flash("error_msg", "Houve um error internor")
-         res.redirect("/404")
-      })
-   })
+// Usa a variável de ambiente do Render (ou o localhost caso esteja rodando no seu PC)
+const mongoURI = process.env.MONGO_URI || 'mongodb://localhost/blogapp';
+
+mongoose.connect(mongoURI).then(() => {
+   console.log('Conectado ao MongoDB com sucesso!');
+}).catch((err) => {
+   console.log('Erro ao se conectar ao MongoDB: ' + err);
+});
 
    app.get('/postagem/:slug', (req, res) => {
       Postagem.findOne({slug: req.params.slug}).lean().then((postagem) => {
