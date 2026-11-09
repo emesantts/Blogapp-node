@@ -57,7 +57,7 @@ app.engine('handlebars', engine({
 
 app.set('view engine', 'handlebars');
 app.set('views', './views');
- //Mongoose
+ 
   //Mongoose
 mongoose.Promise = global.Promise;
 
